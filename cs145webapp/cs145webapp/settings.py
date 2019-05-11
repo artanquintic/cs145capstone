@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'pigeonhole.apps.PigeonholeConfig',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -124,8 +125,8 @@ STATIC_URL = '/static/'
 SERVER_MAIL = 'aj.styles000901@gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'aj.styles000901@gmail.com'
-EMAIL_HOST_PASSWORD = 'ToN16ht@liv3'
+EMAIL_HOST_USER = 'pigeonhole.principle.cs145@gmail.com'
+EMAIL_HOST_PASSWORD = 'quenyasindarin'
 EMAIL_PORT = 587
 #EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
