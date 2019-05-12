@@ -11,7 +11,7 @@ class Pigeonhole(models.Model):
 class Owner(models.Model):
 	name = models.CharField(max_length = 100)
 	email = models.EmailField()
-	idNo = models.IntegerField(max_length = 9)
+	idNo = models.IntegerField()
 	pigeonhole = models.OneToOneField(Pigeonhole, on_delete=models.CASCADE)
 
 	def __str__(self):
