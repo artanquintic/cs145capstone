@@ -4,11 +4,8 @@ from rest_framework import routers
 from rest_framework.urlpatterns import format_suffix_patterns
 
 from . import views
-<<<<<<< HEAD
 from .views import PigeonholeCreateView, PigeonholeDeleteView, PigeonholeDetailView, OwnerAddView, OwnerUpdateView, OwnerDeleteView
-=======
-from .views import PigeonholeActionList, PigeonholeDetailView, OwnerAddView, OwnerUpdateView, OwnerDeleteView
->>>>>>> eeec36917b939b74ae2927c358942e19482ec1ef
+
 
 #router = routers.DefaultRouter()
 #router.register('pigeonholeaction', views.PigeonholeActionList)
