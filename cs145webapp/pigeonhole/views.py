@@ -15,3 +15,25 @@ def NotifyProfessor(request):
 	to_list = ['clvillamera@up.edu.ph']
 	send_mail(subject, message, from_email, to_list, fail_silently=True)	
 	return HttpResponse('HELLO')
+
+class OwnerAddView(CreateView):
+	model = Owner
+	fields = ['pigeonhole', 'name', 'email', 'idNo']
+
+	def form_valid(self, form):
+		return super().form_valid(form)
+
+class OwnerUpdateView(UpdateView):
+	model = Owner
+	fields = ['pigeonhole', 'name', 'email', 'idNo']
+
+	def form_valid(self, form):
+		return super().form_valid(form)
+
+class OwnerDeleteView(DeleteView):
+	model = Owner
+	success_url = '/'
+
+	def test_func(self):
+		owner = self.get_object()
+		return True
