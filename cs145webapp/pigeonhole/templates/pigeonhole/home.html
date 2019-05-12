@@ -1,4 +1,20 @@
 {% extends "pigeonhole/index.html" %}
+{% load static %}
 {% block content %}
-	<h5 style = "margin-top: 10em;"> hello </h5>
-{% endblock content%}
+	<div class="container" style="margin-top: 7em;">
+		
+		{% for ph in pigeonhole %}
+		<ul>
+			<li class="list-group-item-light">
+				{{ ph.p_number }}
+				{% if ph.owner %}
+					-  {{ph.owner}}
+				{% endif %}
+			</li>
+			<a href = "{% url 'delete-pigeonhole' ph.pk %}"> delete </a>
+		</ul>
+		{% endfor %}
+		<a class="btn btn-outline-primary" href="{% url 'create-pigeonhole' %}">add pigeonhole</a>
+		<a class="btn btn-outline-secondary" href = "{% url 'add-owner' %}"> add owner </a>
+	</div>
+{% endblock %}

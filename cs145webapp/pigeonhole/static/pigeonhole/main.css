@@ -7,7 +7,6 @@ body {
   font-size: 14px;
 }
 
-
 h1, h2, h3, h4, h5, h6 {
   color: #444444;
 }
@@ -16,5 +15,9 @@ h1, h2, h3, h4, h5, h6 {
   background-color: #8f1838;
   text-align: center;
   z-index: 9999;
-  /*margin-bottom: 0px;*/
+  /*padding-bottom: 10em;*/
+}
+
+.mainbody{
+  margin-top: 10em;
 }

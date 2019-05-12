@@ -14,11 +14,15 @@ from .serializers import PigeonholeActionSerializer
 
 # Create your views here.
 context = {
-	'pigeonhole' : Pigeonhole.objects.all(),
+	'pigeonhole' : Pigeonhole.objects.all().order_by('p_number'),
 	'owner': Owner.objects.all(),
 }
 
 def homepage(request):
+	context = {
+		'pigeonhole' : Pigeonhole.objects.all().order_by('p_number'),
+		'owner': Owner.objects.all(),
+	}
 	return render(request, 'pigeonhole/home.html', context)
 
 def NotifyProfessor(request):
@@ -36,6 +40,22 @@ class PigeonholeActionView(viewsets.ModelViewSet):
 	queryset = PigeonholeAction.objects.all()
 	serializer_class = PigeonholeActionSerializer
 
+class PigeonholeCreateView(CreateView):
+	model = Pigeonhole
+	fields = ['p_number']
+
+	def form_valid(self, form):
+		return super().form_valid(form)
+
+
+class PigeonholeDeleteView(DeleteView):
+	model = Pigeonhole
+	success_url = '/'
+
+	def test_func(self):
+		pigeonhole = self.get_object()
+		return True
+
 class PigeonholeDetailView(DetailView):
 	model = Pigeonhole
  
@@ -45,12 +65,12 @@ class PigeonholeDetailView(DetailView):
 		return context
 
 class OwnerAddView(CreateView):
-	template_name = 'pigeonhole/add_owner.html'
 	model = Owner
 	fields = ['pigeonhole', 'name', 'email', 'idNo']
 
 	def form_valid(self, form):
 		return super().form_valid(form)
+
 
 class OwnerUpdateView(UpdateView):
 	model = Owner
