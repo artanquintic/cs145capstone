@@ -4,10 +4,14 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.generic import ListView, CreateView, DeleteView, UpdateView, DetailView
 
-
 from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework.views import APIView
+from rest_framework.renderers import JSONRenderer
+from rest_framework.parsers import JSONParser
+
+
+import io
 
 from .models import Owner,Pigeonhole,PigeonholeAction
 from .serializers import PigeonholeActionSerializer
@@ -21,7 +25,22 @@ context = {
 def homepage(request):
 	return render(request, 'pigeonhole/home.html', context)
 
-def NotifyProfessor(request):
+class PigeonholeActionList(APIView):
+	def get(self, request):
+		pigeonholeaction = PigeonholeAction.objects.all().filter(emailed=False)
+		owner = Owner.objects.all()
+		serializer = PigeonholeActionSerializer(pigeonholeaction, many=True)
+
+		print(owner[0].email)
+		for i in range(0,pigeonholeaction.count()):
+			print(serializer.data[i]['p_number'])
+
+		return Response(serializer.data)
+	
+	def post(self):
+		pass	
+
+def NotifyProfessor(request, to_list):
 	#send_mail(subject, message, from_email, to_list, fail_silently=True, )
 	subject = 'Pigeonhole Principle'
 	message = 'Student' + ' sent you something.'
@@ -30,11 +49,7 @@ def NotifyProfessor(request):
 	
 
 	send_mail(subject, message, from_email, to_list, fail_silently=True)	
-	return HttpResponse('HELLO')
-
-class PigeonholeActionView(viewsets.ModelViewSet):
-	queryset = PigeonholeAction.objects.all()
-	serializer_class = PigeonholeActionSerializer
+	#return HttpResponse('HELLO')
 
 class PigeonholeDetailView(DetailView):
 	model = Pigeonhole
