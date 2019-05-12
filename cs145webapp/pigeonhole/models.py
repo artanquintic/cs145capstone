@@ -29,6 +29,7 @@ class PigeonholeAction(models.Model):
 	name = models.CharField(max_length = 100, null=True)
 	p_number = models.IntegerField()
 	timestamp = models.DateTimeField()
+	emailed = models.BooleanField(default=False)
 
 	def __str__(self):
 		return str(self.p_number)
