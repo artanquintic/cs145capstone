@@ -9,7 +9,7 @@ from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
-
+from rest_framework import status
 
 import io
 
@@ -29,27 +29,54 @@ def homepage(request):
 	}
 	return render(request, 'pigeonhole/home.html', context)
 
+def FinderPigeonhole(owner, pholeaction_idNo):
+	for i in range(0, owner.count()):
+		if owner[i].idNo == pholeaction_idNo:
+			return i
+	return False		
+
 class PigeonholeActionList(APIView):
 	def get(self, request):
 		pigeonholeaction = PigeonholeAction.objects.all().filter(emailed=False)
+		pigeonhole = Pigeonhole.objects.all()
 		owner = Owner.objects.all()
 		serializer = PigeonholeActionSerializer(pigeonholeaction, many=True)
 
-		print(owner[0].email)
 		for i in range(0,pigeonholeaction.count()):
-			print(serializer.data[i]['p_number'])
+			to_list = []
+			to_list.append(owner[serializer.data[i]['p_number']-1].email)
+			
+			# If the Professor taps on his/her pigeonhole to get the things on it
+			if FinderPigeonhole(owner,serializer.data[i]['id_number']) != False:
+				if owner[FinderPigeonhole(owner,serializer.data[i]['id_number'])].pigeonhole.p_number == serializer.data[i]['p_number']:
+					prof_get = Pigeonhole.objects.get(p_number=serializer.data[i]['p_number'])
+					prof_get.item = False			# Empty the pigeonhole
+					prof_get.save()
+					continue
+
+			if serializer.data[i]['name'] == None:
+				message = "A student put something on your pigeonhole."
+			else:
+				message = str(serializer.data[i]['name']) + " put something on your pigeonhole."
+			#NotifyProfessor(request, message, to_list)
+			#print(pigeonholeaction[i].emailed)	
+			#pigeonholeaction[i].emailed = True
+			#pigeonholeaction[i].save()	
+
 
 		return Response(serializer.data)
 	
-	def post(self):
-		pass	
+	def post(self, request):
+		serializer = PigeonholeActionSerializer(data=request.data)
+		if serializer.is_valid():
+			serializer.save()
+			return Response(serializer.data, status=status.HTTP_201_CREATED)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)		
 
-def NotifyProfessor(request, to_list):
+def NotifyProfessor(request, message, to_list):
 	#send_mail(subject, message, from_email, to_list, fail_silently=True, )
 	subject = 'Pigeonhole Principle'
-	message = 'Student' + ' sent you something.'
 	from_email = settings.EMAIL_HOST_USER
-	to_list = ['clvillamera@up.edu.ph']
 	
 
 	send_mail(subject, message, from_email, to_list, fail_silently=True)	
