@@ -25,7 +25,7 @@ SECRET_KEY = 'i(mca=3je7kx_2&eyj$3#9u+bu*5x*y@+$pk!c*n-d9pepx_s!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['ec2-52-221-181-93.ap-southeast-1.compute.amazonaws.com', '52.221.181.93']
 
 
 # Application definition
@@ -76,10 +76,18 @@ WSGI_APPLICATION = 'cs145webapp.wsgi.application'
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    'default':{
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'cs145',
+        'USER': 'cs145user',
+        'PASSWORD': 'cs145',
+        'HOST': 'localhost',
+        'PORT': '',
     }
+   # 'default': {
+   #     'ENGINE': 'django.db.backends.sqlite3',
+   #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+   # }
 }
 
 
@@ -120,6 +128,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 # For sending email
 SERVER_MAIL = 'aj.styles000901@gmail.com'
