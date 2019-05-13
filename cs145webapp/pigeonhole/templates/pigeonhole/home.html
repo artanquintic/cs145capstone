@@ -2,7 +2,6 @@
 {% load static %}
 {% block content %}
 	<div class="container" style="margin-top: 7em;">
-		
 		{% for ph in pigeonhole %}
 		<ul>
 			<li class="list-group-item-light">
@@ -12,6 +11,9 @@
 				{% endif %}
 			</li>
 			<a href = "{% url 'delete-pigeonhole' ph.pk %}"> delete </a>
+			{% if ph.owner.pk %}
+				<a href = "{% url 'update-owner' ph.owner.pk %}"> edit </a>
+			{% endif %}
 		</ul>
 		{% endfor %}
 		<a class="btn btn-outline-primary" href="{% url 'create-pigeonhole' %}">add pigeonhole</a>
