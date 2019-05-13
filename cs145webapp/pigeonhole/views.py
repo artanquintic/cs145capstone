@@ -37,49 +37,49 @@ def FinderPigeonhole(owner, pholeaction_idNo):
 
 class PigeonholeActionList(APIView):
 	def get(self, request):
-		pigeonholeaction = PigeonholeAction.objects.all().filter(emailed=False)
-		pigeonhole = Pigeonhole.objects.all()
-		owner = Owner.objects.all()
-		serializer = PigeonholeActionSerializer(pigeonholeaction, many=True)
-
-		for i in range(0,pigeonholeaction.count()):
-			to_list = []
-			to_list.append(owner[serializer.data[i]['p_number']-1].email)
-			
-			# If the Professor taps on his/her pigeonhole to get the things on it
-			if FinderPigeonhole(owner,serializer.data[i]['id_number']) != False:
-				if owner[FinderPigeonhole(owner,serializer.data[i]['id_number'])].pigeonhole.p_number == serializer.data[i]['p_number']:
-					prof_get = Pigeonhole.objects.get(p_number=serializer.data[i]['p_number'])
-					prof_get.item = False			# Empty the pigeonhole
-					prof_get.save()
-					continue
-
-			if serializer.data[i]['name'] == None:
-				message = "A student put something on your pigeonhole."
-			else:
-				message = str(serializer.data[i]['name']) + " put something on your pigeonhole."
-			#NotifyProfessor(request, message, to_list)
-			#print(pigeonholeaction[i].emailed)	
-			#pigeonholeaction[i].emailed = True
-			#pigeonholeaction[i].save()	
-
-
+		print('lol')
 		return Response(serializer.data)
 	
 	def post(self, request):
+		print('yolol')
 		serializer = PigeonholeActionSerializer(data=request.data)
+		print(serializer.initial_data)
+
 		if serializer.is_valid():
 			serializer.save()
+			NotifyProfessor(request, serializer)
 			return Response(serializer.data, status=status.HTTP_201_CREATED)
+		
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)		
 
-def NotifyProfessor(request, message, to_list):
-	#send_mail(subject, message, from_email, to_list, fail_silently=True, )
+def NotifyProfessor(request, serializer):
+	pigeonhole = Pigeonhole.objects.all()
+	owner = Owner.objects.all()
+	#serializer = PigeonholeActionSerializer(pigeonholeaction, many=True)
+
+	to_list = []
+	to_list.append(owner[serializer.data['p_number']-1].email)
+			
+	# If the Professor taps on his/her pigeonhole to get the things on it
+	if FinderPigeonhole(owner,serializer.data['id_number']) != False:
+		if owner[FinderPigeonhole(owner,serializer.data['id_number'])].pigeonhole.p_number == serializer.data['p_number']:
+			prof_get = Pigeonhole.objects.get(p_number=serializer.data['p_number'])
+			prof_get.item = False			# Empty the pigeonhole
+			prof_get.save()
+			return
+
+	if serializer.data['name'] == 'NULL':
+		message = "A student put something on your pigeonhole."
+	else:
+		message = str(serializer.data['name']) + " put something on your pigeonhole."
+		
+	
 	subject = 'Pigeonhole Principle'
 	from_email = settings.EMAIL_HOST_USER
 	
 
-	send_mail(subject, message, from_email, to_list, fail_silently=True)	
+	send_mail(subject, message, from_email, to_list, fail_silently=True)
+	print('naemail na')	
 	#return HttpResponse('HELLO')
 
 class PigeonholeCreateView(CreateView):
