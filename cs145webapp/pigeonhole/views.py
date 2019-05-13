@@ -74,7 +74,7 @@ def NotifyProfessor(request, serializer):
 		message = str(serializer.data['name']) + " put something on your pigeonhole."
 		
 	
-	subject = 'Pigeonhole Principle'
+	subject = 'Smart Pigeonhole'
 	from_email = settings.EMAIL_HOST_USER
 	
 
