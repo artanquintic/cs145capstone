@@ -18,32 +18,23 @@
 
 <body>
   <header class="site-header">
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top">
+    <!-- <nav class="navbar navbar-expand-md navbar-dark fixed-top">
       <div class="container">
-      	<a class="navbar-brand" href="{% url 'homepage' %}">Smart Pigeonhole</a>
+      	<a id="title" class="topnav-centered" href="{% url 'homepage' %}"><img src = "{% static 'pigeonhole/logo.png' %}"></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
-              <!-- <li class ="nav-item active">
-                <a class="nav-link"> Smart Pigeonhole
-                  <span class="sr-only">(current)</span>
-                </a>
-              </li> -->
-                <!-- <li class ="nav-item">
-                  <a class="nav-link">Settings</a>
-                </li>
-                <li class ="nav-item">
-                    <a class="nav-link">Log in</a>
-                </li>
-                <li class ="nav-item">
-                  <a class="nav-link">Register</a>
-                </li> -->
           </ul>
         </div>
       </div>
-    </nav>
+    </nav> -->
+    <center>
+      <a class="logo" href="{% url 'homepage' %}">
+        <img src = "{% static 'pigeonhole/logo.png' %}">
+      </a>
+    </center>
   </header>
   {% block content %}{% endblock %}
 </body>
