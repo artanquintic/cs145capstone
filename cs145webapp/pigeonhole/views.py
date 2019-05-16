@@ -73,6 +73,10 @@ def NotifyProfessor(request, serializer):
 			prof_get.save()
 			return
 
+	pigeonhole_status = Pigeonhole.objects.get(p_number=serializer.data['p_number'])
+	pigeonhole_status.item = True
+	pigeonhole_status.save()
+
 	if serializer.data['name'] == 'NULL':
 		message = "A student put something on your pigeonhole."
 	else:
