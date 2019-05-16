@@ -1,22 +1,71 @@
 {% extends "pigeonhole/index.html" %}
 {% load static %}
 {% block content %}
-	<div class="container" style="margin-top: 7em;">
-		{% for ph in pigeonhole %}
-		<ul>
-			<li class="list-group-item-light">
-				{{ ph.p_number }}
-				{% if ph.owner %}
-					-  {{ph.owner}}
-				{% endif %}
-			</li>
-			<a href = "{% url 'delete-pigeonhole' ph.pk %}"> delete </a>
-			{% if ph.owner.pk %}
-				<a href = "{% url 'update-owner' ph.owner.pk %}"> edit </a>
-			{% endif %}
-		</ul>
-		{% endfor %}
-		<a class="btn btn-outline-primary" href="{% url 'create-pigeonhole' %}">add pigeonhole</a>
-		<a class="btn btn-outline-secondary" href = "{% url 'add-owner' %}"> add owner </a>
+	<div class="container" style="margin-top: 5em; padding-bottom: 2em;">
+		<center>
+			<!-- <img class="hole" src="{% static 'pigeonhole/hole.png' %}" usemap="#hole"/>
+			<map name = "hole">
+		         <area shape = "rect" coords = "23,23,306,280" alt = "HTML Tutorial"
+		            href = "{% url 'create-pigeonhole' %}"	/>
+		         <area shape = "rect" coords = "333,23,615,280" alt = "HTML Tutorial"
+		            href = "{% url 'create-pigeonhole' %}"/>
+		      </map> -->
+		    <!-- <img class="hole" src="{% static 'pigeonhole/hole_one.png' %}" usemap="#hole"/> -->
+			{% for ph in pigeonhole %}
+				<div class="col-sm-6">
+					<a data-toggle="modal" data-target="#ph-item{{ ph.pk }}">
+					    <img class="hole" src="{% static 'pigeonhole/hole_one.png' %}" usemap="#hole"/>
+					</a>
+					<h5>
+						{{ ph.p_number }}
+						{% if ph.owner %}
+							-  {{ph.owner}}
+						{% endif %}
+					</h5>
+
+			    <!-- {% if forloop.first %}<div class="row">{% endif %}
+			    <div class="col-sm-6">
+		            <a data-toggle="modal" data-target="#ph-item{{ ph.pk }}">
+					    <img class="hole" src="{% static 'pigeonhole/hole_one.png' %}" usemap="#hole"/>
+					</a>
+					<h5>
+						{{ ph.p_number }}
+						{% if ph.owner %}
+							-  {{ph.owner}}
+						{% endif %}
+					</h5>
+		        </div>
+			    {% if forloop.counter|divisibleby:3 %}</div> --><!-- <div class="row">{% endif %}
+			    {% if forloop.last %}</div>{% endif %} -->
+			<div class="modal fade" id="ph-item{{ ph.pk }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header sidepane-modal">
+                      <h4 class="modal-title" id="exampleModalLongTitle">Pigeonhole No. {{ ph.p_number }}</h4>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                    {% if ph.owner %}
+                      <h5><b>{{ ph.owner }}</b></h5>
+                      <p style="font-size: 9pt;">ID no.:{{ ph.owner.idNo }}</p>
+                      <br>
+                    {% endif %}
+					{% if ph.owner.pk %}
+						<a href = "{% url 'update-owner' ph.owner.pk %}"> edit </a>
+					{% endif %}
+                      <a href = "{% url 'delete-pigeonhole' ph.pk %}"> delete </a>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+			{% endfor %}
+			<a class="btn btn-outline-primary" href="{% url 'create-pigeonhole' %}">add pigeonhole</a>
+			<a class="btn btn-outline-secondary" href = "{% url 'add-owner' %}"> add owner </a>
+		</center>
 	</div>
 {% endblock %}
