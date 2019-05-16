@@ -30,10 +30,11 @@ def homepage(request):
 	return render(request, 'pigeonhole/home.html', context)
 
 # For the ID/Student Number of the tapper check if it a student/prof
-def FinderPigeonhole(owner, pholeaction_idNo):
-	for i in range(0, owner.count()):
-		if owner[i].idNo == pholeaction_idNo:
-			return i
+def FinderPigeonhole(owners, pholeaction_idNo):
+	for owner in owners:
+		print("equal to {}?".format(owner.idNo))
+		if owner.idNo == pholeaction_idNo:
+			return owner
 	return False		
 
 # Returning the owner itself, based on the phole number
@@ -49,10 +50,11 @@ class PigeonholeActionList(APIView):
 	
 	def post(self, request):
 		serializer = PigeonholeActionSerializer(data=request.data)
-
 		if serializer.is_valid():
+			print(serializer.validated_data)
 			serializer.save()
 			NotifyProfessor(request, serializer)
+			print("email sent")
 			return Response(serializer.data, status=status.HTTP_201_CREATED)
 		
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)		
@@ -61,17 +63,25 @@ class PigeonholeActionList(APIView):
 def NotifyProfessor(request, serializer):
 	pigeonhole = Pigeonhole.objects.all()
 	owner = Owner.objects.all()
+	from_email = settings.EMAIL_HOST_USER
+	subject = "Smart Pigeonhole"
 
 	to_list = []
 	to_list.append(ReturnPigeonhole(owner, serializer.data['p_number']).email)
 			
 	# If the Professor taps on his/her pigeonhole to get the things on it
-	if FinderPigeonhole(owner,serializer.data['id_number']) != False:
-		if owner[FinderPigeonhole(owner,serializer.data['id_number'])].pigeonhole.p_number == serializer.data['p_number']:
+	
+	prof_index = FinderPigeonhole(owner,serializer.data['id_number'])
+	if prof_index != False:
+		if prof_index.pigeonhole.p_number == serializer.data['p_number']:
 			prof_get = Pigeonhole.objects.get(p_number=serializer.data['p_number'])
 			prof_get.item = False			# Empty the pigeonhole
 			prof_get.save()
+			print("pare prof ako")
+			message = "FOR DEMO ONLY - ID MATCHED PROF ID NO"
+			send_mail(subject, message, from_email, to_list, fail_silently=True)
 			return
+	print('student to')
 
 	pigeonhole_status = Pigeonhole.objects.get(p_number=serializer.data['p_number'])
 	pigeonhole_status.item = True
@@ -83,9 +93,7 @@ def NotifyProfessor(request, serializer):
 		message = str(serializer.data['name']) + " (" + str(serializer.data['id_number']) + ")" + " has placed an item in your pigeonhole.\n\nTimestamp: " + str(serializer.data['timestamp'])
 		
 	
-	subject = 'Smart Pigeonhole'
-	from_email = settings.EMAIL_HOST_USER
-	
+	send_mail(subject, message, from_email, to_list, fail_silently=True)
 
 class PigeonholeCreateView(CreateView):
 	model = Pigeonhole
