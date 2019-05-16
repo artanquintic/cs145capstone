@@ -37,13 +37,6 @@ def FinderPigeonhole(owners, pholeaction_idNo):
 			return owner
 	return False		
 
-# Returning the owner itself, based on the phole number
-def ReturnPigeonhole(owner, pholeaction_number):
-	for i in range(0, owner.count()):
-		if owner[i].pigeonhole.p_number == pholeaction_number:
-			return owner[i]
-	return False		
-
 class PigeonholeActionList(APIView):
 	def get(self, request):
 		return Response(serializer.data)
@@ -59,7 +52,6 @@ class PigeonholeActionList(APIView):
 		
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)		
 
-
 def NotifyProfessor(request, serializer):
 	pigeonhole = Pigeonhole.objects.all()
 	owner = Owner.objects.all()
@@ -67,7 +59,7 @@ def NotifyProfessor(request, serializer):
 	subject = "Smart Pigeonhole"
 
 	to_list = []
-	to_list.append(ReturnPigeonhole(owner, serializer.data['p_number']).email)
+	to_list.append(owner[serializer.data['p_number']-1].email)
 			
 	# If the Professor taps on his/her pigeonhole to get the things on it
 	
@@ -86,13 +78,15 @@ def NotifyProfessor(request, serializer):
 	pigeonhole_status = Pigeonhole.objects.get(p_number=serializer.data['p_number'])
 	pigeonhole_status.item = True
 	pigeonhole_status.save()
-
+	
 	if serializer.data['name'] == 'NULL':
 		message = "A student placed an item in your pigeonhole.\n\nTimestamp: " + str(serializer.data['timestamp'])
 	else:
 		message = str(serializer.data['name']) + " (" + str(serializer.data['id_number']) + ")" + " has placed an item in your pigeonhole.\n\nTimestamp: " + str(serializer.data['timestamp'])
 		
 	
+	send_mail(subject, message, from_email, to_list, fail_silently=True)
+
 	send_mail(subject, message, from_email, to_list, fail_silently=True)
 
 class PigeonholeCreateView(CreateView):

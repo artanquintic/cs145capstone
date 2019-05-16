@@ -32,16 +32,13 @@ h1, h2, h3, h4, h5, h6 {
 
 .hole{
   margin-bottom: 1em;
+  z-index: 1;
 }
 
 .hole:hover{
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
-/*ul{
-  display: inline;
-}*/
-/*colors
-doofenshmirtz
-green: 58c699
-light green: a7eeb6;
-violet: 753aa6*/
+
+.paper{
+  z-index: 2;
+}

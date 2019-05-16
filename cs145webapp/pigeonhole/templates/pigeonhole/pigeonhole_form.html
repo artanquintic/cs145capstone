@@ -1,6 +1,7 @@
 {% extends "pigeonhole/index.html" %}
 {% load static %}
 {% block content %}
+<center>
 <div class = "content-section">
 	<form method = "POST">
 		{% csrf_token %}
@@ -14,4 +15,5 @@
 		</div>
 	</form>
 	</div>
+</center>
 {% endblock %}

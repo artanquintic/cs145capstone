@@ -2,32 +2,20 @@
 {% load static %}
 {% block content %}
 	<div class="container" style="margin-top: 5em; padding-bottom: 2em;">
-		<!-- <center> -->
-			<!-- <img class="hole" src="{% static 'pigeonhole/hole.png' %}" usemap="#hole"/>
-			<map name = "hole">
-		         <area shape = "rect" coords = "23,23,306,280" alt = "HTML Tutorial"
-		            href = "{% url 'create-pigeonhole' %}"	/>
-		         <area shape = "rect" coords = "333,23,615,280" alt = "HTML Tutorial"
-		            href = "{% url 'create-pigeonhole' %}"/>
-		      </map> -->
-		    <!-- <img class="hole" src="{% static 'pigeonhole/hole_one.png' %}" usemap="#hole"/> -->
 			{% for ph in pigeonhole %}
-				<!-- <div class="col-sm-6">
-					<a data-toggle="modal" data-target="#ph-item{{ ph.pk }}">
-					    <img class="hole" src="{% static 'pigeonhole/hole_one.png' %}" usemap="#hole"/>
-					</a>
-					<h5>
-						{{ ph.p_number }}
-						{% if ph.owner %}
-							-  {{ph.owner}}
-						{% endif %}
-					</h5> -->
-
 			    {% if forloop.first %}<div class="row">{% endif %}
 			    <div class="col">
 			    	<center>
-		            <a class=hole data-toggle="modal" data-target="#ph-item{{ ph.pk }}">
-					    <img class="hole" src="{% static 'pigeonhole/hole_one.png' %}" usemap="#hole"/>
+		            <a class="hole" data-toggle="modal" data-target="#ph-item{{ ph.pk }}">
+		            	{% if ph.owner %}
+						    {% if ph.item %}
+						    	<img class="paper" src="{% static 'pigeonhole/hole_paper.png' %}"/>
+						    {% else %}
+							    <img src="{% static 'pigeonhole/hole_one.png' %}"/>
+						    {% endif %}
+						{% else %}
+						    <img src="{% static 'pigeonhole/hole_one.png' %}"/>
+						{% endif %}
 					</a>
 					<h5>
 						{{ ph.p_number }}
