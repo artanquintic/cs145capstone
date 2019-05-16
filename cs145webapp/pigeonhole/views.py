@@ -45,13 +45,10 @@ def ReturnPigeonhole(owner, pholeaction_number):
 
 class PigeonholeActionList(APIView):
 	def get(self, request):
-		print('hanna jang')
 		return Response(serializer.data)
 	
 	def post(self, request):
-		#print('yolol')
 		serializer = PigeonholeActionSerializer(data=request.data)
-		#print(serializer.initial_data)
 
 		if serializer.is_valid():
 			serializer.save()
@@ -64,7 +61,6 @@ class PigeonholeActionList(APIView):
 def NotifyProfessor(request, serializer):
 	pigeonhole = Pigeonhole.objects.all()
 	owner = Owner.objects.all()
-	#serializer = PigeonholeActionSerializer(pigeonholeaction, many=True)
 
 	to_list = []
 	to_list.append(ReturnPigeonhole(owner, serializer.data['p_number']).email)
@@ -72,7 +68,6 @@ def NotifyProfessor(request, serializer):
 	# If the Professor taps on his/her pigeonhole to get the things on it
 	if FinderPigeonhole(owner,serializer.data['id_number']) != False:
 		if owner[FinderPigeonhole(owner,serializer.data['id_number'])].pigeonhole.p_number == serializer.data['p_number']:
-			print('prof to')
 			prof_get = Pigeonhole.objects.get(p_number=serializer.data['p_number'])
 			prof_get.item = False			# Empty the pigeonhole
 			prof_get.save()
@@ -87,12 +82,6 @@ def NotifyProfessor(request, serializer):
 	subject = 'Smart Pigeonhole'
 	from_email = settings.EMAIL_HOST_USER
 	
-
-	#send_mail(subject, message, from_email, to_list, fail_silently=True)
-	print('naemail na')
-	print(serializer.data['p_number'])	
-	print(to_list)
-	#return HttpResponse('HELLO')
 
 class PigeonholeCreateView(CreateView):
 	model = Pigeonhole
