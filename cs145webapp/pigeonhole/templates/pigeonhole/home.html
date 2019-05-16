@@ -12,16 +12,31 @@
 		      </map> -->
 		    <!-- <img class="hole" src="{% static 'pigeonhole/hole_one.png' %}" usemap="#hole"/> -->
 			{% for ph in pigeonhole %}
-			<a data-toggle="modal" data-target="#ph-item{{ ph.pk }}">
-			    <img class="hole" src="{% static 'pigeonhole/hole_one.png' %}" usemap="#hole"/>
-			</a>
-			<h5>
-				{{ ph.p_number }}
-				{% if ph.owner %}
-					-  {{ph.owner}}
-				{% endif %}
-			</h5>
+				<div class="col-sm-6">
+					<a data-toggle="modal" data-target="#ph-item{{ ph.pk }}">
+					    <img class="hole" src="{% static 'pigeonhole/hole_one.png' %}" usemap="#hole"/>
+					</a>
+					<h5>
+						{{ ph.p_number }}
+						{% if ph.owner %}
+							-  {{ph.owner}}
+						{% endif %}
+					</h5>
 
+			    <!-- {% if forloop.first %}<div class="row">{% endif %}
+			    <div class="col-sm-6">
+		            <a data-toggle="modal" data-target="#ph-item{{ ph.pk }}">
+					    <img class="hole" src="{% static 'pigeonhole/hole_one.png' %}" usemap="#hole"/>
+					</a>
+					<h5>
+						{{ ph.p_number }}
+						{% if ph.owner %}
+							-  {{ph.owner}}
+						{% endif %}
+					</h5>
+		        </div>
+			    {% if forloop.counter|divisibleby:3 %}</div> --><!-- <div class="row">{% endif %}
+			    {% if forloop.last %}</div>{% endif %} -->
 			<div class="modal fade" id="ph-item{{ ph.pk }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                   <div class="modal-content">
