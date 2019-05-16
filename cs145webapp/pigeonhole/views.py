@@ -29,18 +29,10 @@ def homepage(request):
 	}
 	return render(request, 'pigeonhole/home.html', context)
 
-# For the ID/Student Number of the tapper check if it a student/prof
 def FinderPigeonhole(owner, pholeaction_idNo):
 	for i in range(0, owner.count()):
 		if owner[i].idNo == pholeaction_idNo:
 			return i
-	return False		
-
-# Returning the owner itself, based on the phole number
-def ReturnPigeonhole(owner, pholeaction_number):
-	for i in range(0, owner.count()):
-		if owner[i].pigeonhole.p_number == pholeaction_number:
-			return owner[i]
 	return False		
 
 class PigeonholeActionList(APIView):
@@ -49,6 +41,7 @@ class PigeonholeActionList(APIView):
 	
 	def post(self, request):
 		serializer = PigeonholeActionSerializer(data=request.data)
+		print(serializer.initial_data)
 
 		if serializer.is_valid():
 			serializer.save()
@@ -57,13 +50,13 @@ class PigeonholeActionList(APIView):
 		
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)		
 
-
 def NotifyProfessor(request, serializer):
 	pigeonhole = Pigeonhole.objects.all()
 	owner = Owner.objects.all()
+	#serializer = PigeonholeActionSerializer(pigeonholeaction, many=True)
 
 	to_list = []
-	to_list.append(ReturnPigeonhole(owner, serializer.data['p_number']).email)
+	to_list.append(owner[serializer.data['p_number']-1].email)
 			
 	# If the Professor taps on his/her pigeonhole to get the things on it
 	if FinderPigeonhole(owner,serializer.data['id_number']) != False:
@@ -76,7 +69,7 @@ def NotifyProfessor(request, serializer):
 	pigeonhole_status = Pigeonhole.objects.get(p_number=serializer.data['p_number'])
 	pigeonhole_status.item = True
 	pigeonhole_status.save()
-
+	
 	if serializer.data['name'] == 'NULL':
 		message = "A student put something on your pigeonhole."
 	else:
@@ -86,6 +79,8 @@ def NotifyProfessor(request, serializer):
 	subject = 'Smart Pigeonhole'
 	from_email = settings.EMAIL_HOST_USER
 	
+
+	send_mail(subject, message, from_email, to_list, fail_silently=True)
 
 class PigeonholeCreateView(CreateView):
 	model = Pigeonhole
