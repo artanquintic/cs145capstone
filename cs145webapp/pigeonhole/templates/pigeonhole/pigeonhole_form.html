@@ -1,0 +1,17 @@
+{% extends "pigeonhole/index.html" %}
+{% load static %}
+{% block content %}
+<div class = "content-section">
+	<form method = "POST">
+		{% csrf_token %}
+		<fieldset class="form-group">
+			<legend class="border-bottom mb-4">Add Pigeonhole</legend>
+			{{ form.as_p }}
+		</fieldset>
+		<div class="form-group">
+			<button class="btn btn-success" type="submit" style="height: 35px; font-size: 10pt;">Add</button>
+			<a class="btn btn-success ml-3" style="height: 35px; font-size: 10pt;" href="{% url 'homepage' %}">Back</a>
+		</div>
+	</form>
+	</div>
+{% endblock %}
